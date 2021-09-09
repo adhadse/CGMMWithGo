@@ -6,21 +6,21 @@ import (
 )
 
 
-func absInt(x int) int {
+func absInt(x float32) float32 {
 	return absDiffInt(x, 0)
 }
 
-func absDiffInt(x, y int) int {
+func absDiffInt(x, y float32) float32 {
 	if x < y {
 		return y - x
 	}
 	return x - y
 }
 
-func DDA(x0, y0, x1, y1 int) {
+func DDA(x0, y0, x1, y1 float32) {
 	dx := x1 - x0
 	dy := y1 - y0
-	steps := 0
+	var steps float32 = 0.0
 
 	if absInt(dx) > absInt(dy) {
 		steps = absInt(dx)
@@ -29,13 +29,14 @@ func DDA(x0, y0, x1, y1 int) {
 	}
 
 	// calculate increment in x & y for each steps
-	xinc := dx / steps
-	yinc := dy / steps
+	var xinc = dx / steps
+	var yinc = dy / steps
 
 	// Put pixel for each step
 	x := x0
 	y := y0
-	for i := 0; i <= steps; i++ {
+	var i float32 = 0.0
+	for ;i <= steps; i++ {
 		rl.DrawPixel(int32(x), int32(y), rl.Black)
 		x += xinc
 		y += yinc
