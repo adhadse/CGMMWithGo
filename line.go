@@ -6,15 +6,11 @@ import (
 )
 
 
-func absInt(x float32) float32 {
-	return absDiffInt(x, 0)
-}
-
-func absDiffInt(x, y float32) float32 {
-	if x < y {
-		return y - x
-	}
-	return x - y
+type LineInt struct {
+	x1 int
+	y1 int
+	x2 int
+	y2 int
 }
 
 func DDA(x0, y0, x1, y1 float32) {
@@ -77,7 +73,3 @@ func Bresenham(x1, y1, x2, y2 int32) {
 		x += 1
 	}
 }
-
-
-
-

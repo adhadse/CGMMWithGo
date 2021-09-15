@@ -7,21 +7,19 @@ import (
 	"testing"
 )
 
-
 func init() {
 	runtime.LockOSThread()
 }
 
-func Test_DDA(t *testing.T) {
+func TestDDA(t *testing.T) {
 	var x1 float32 = 2
 	var y1 float32 = 3
 	var x2 float32 = 231
 	var y2 float32 = 344
 
-	screenWidth := int32(800)
-	screenHeight := int32(600)
-	rl.InitWindow(screenWidth, screenHeight, "DDA algorithm | Computer Graphics Demo algorithms | " +
-		fmt.Sprintf("Line Draw between (%.2f, %.2f) and (%.2f, %.2f)", x1, y1, x2, y2))
+	screenWidth := int32(xMax)
+	screenHeight := int32(yMax)
+	rl.InitWindow(screenWidth, screenHeight, "DDA algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
 	rl.SetWindowIcon(winImage)
@@ -31,12 +29,11 @@ func Test_DDA(t *testing.T) {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		DDA(x1, y1, x2, y2)
-
 		if rl.IsMouseButtonDown(0) {
 			x1, y1 = float32(rl.GetMouseX()), float32(rl.GetMouseY())
-			if rl.IsMouseButtonReleased(0) {
-				x2, y2 = float32(rl.GetMouseX()), float32(rl.GetMouseY())
-			}
+		}
+		if rl.IsMouseButtonPressed(0) {
+			x2, y2 = float32(rl.GetMouseX()), float32(rl.GetMouseY())
 		}
 		rl.EndDrawing()
 	}
@@ -44,14 +41,14 @@ func Test_DDA(t *testing.T) {
 }
 
 
-func Test_Bresenham(t *testing.T) {
+func TestBresenham(t *testing.T) {
 	var x1 int32 = 2
 	var y1 int32 = 3
 	var x2 int32 = 231
 	var y2 int32 = 500
 
-	screenWidth := int32(800)
-	screenHeight := int32(600)
+	screenWidth := int32(xMax)
+	screenHeight := int32(yMax)
 	rl.InitWindow(screenWidth, screenHeight, "Bresenham algorithm | Computer Graphics Demo algorithms | " +
 		fmt.Sprintf("Line Draw between (%d, %d) and (%d, %d)", x1, y1, x2, y2))
 	defer rl.CloseWindow()
@@ -65,4 +62,11 @@ func Test_Bresenham(t *testing.T) {
 		rl.EndDrawing()
 	}
 	rl.CloseWindow()
+}
+
+func TestCohenSutherlandClip(T *testing.T) {
+	l := LineInt{3, 3, 500, 440}
+	CohenSutherlandClip(l)
+	fmt.Printf("Region code for Point 1 (%d, %d) = %04b \n", l.x1, l.y1, computeRegionCode(l.x1, l.y1))
+	fmt.Printf("Region code for Point 2 (%d, %d) = %04b \n", l.x2, l.y2, computeRegionCode(l.x2, l.y2))
 }
