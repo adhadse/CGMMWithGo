@@ -16,12 +16,12 @@ const (
 // Function to compute region code for a point(x, y)
 func computeRegionCode(x, y int) int {
 	 code := inside
-	 if x < xMin {        // to the left of rectangle
+	 if x < xMin { // to the left of rectangle
 		 code |= left
 	 } else if x > xMax { // to the right of rectangle
 		 code |= right
 	 }
-	 if y < yMin {        // below the rectangle
+	 if y < yMin { // below the rectangle
 		 code |= bottom
  	 } else if y > yMax { // above the rectangle
 		  code |= top
@@ -32,19 +32,18 @@ func computeRegionCode(x, y int) int {
 func CohenSutherlandClip(l LineInt) {
 	code1, code2 := computeRegionCode(l.x1, l.y1), computeRegionCode(l.x2, l.y2)
 
-	for true {
-		if code1 == 0 && code2 == 0 {                  // If both endpoints lie within rectangle
-			fmt.Printf("Line accepted (%d,%d) and (%d,%d)\n", l.x1, l.y1, l.x2, l.y2)
-			break
-		} else if itob(code1 & code2) {                // If both endpoints lie outside rectangle
-			fmt.Printf("Line rejected (%d,%d) and (%d,%d)\n", l.x1, l.y1, l.x2, l.y2)
-			break
-		} else {
-			// If Some segment of line lies within the
-			// rectangle
+	switch {
+		case code1 == 0 && code2 == 0:
+			// If both endpoints lie within rectangle
+			fmt.Printf("Line accepted from (%d,%d) to (%d,%d)\n", l.x1, l.y1, l.x2, l.y2)
+		case itob(code1 & code2):
+			// If both endpoints lie outside rectangle
+			fmt.Printf("Line rejected from (%d,%d) to (%d,%d)\n", l.x1, l.y1, l.x2, l.y2)
+		default:
+			// If Some segment of line lies within the rectangle
 			var codeOut int
-			if code1 != 0 {                            // At least one endpoint is outside the
-				codeOut = code1 // rectangle, pick it.
+			if code1 != inside {                            // At least one endpoint is outside the
+				codeOut = code1                             // rectangle, pick it.
 			} else {
 				codeOut = code2
 			}
@@ -74,6 +73,5 @@ func CohenSutherlandClip(l LineInt) {
 			} else {
 				l.x2, l.y2 = x, y
 			}
-		}
 	}
 }
