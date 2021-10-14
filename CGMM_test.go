@@ -104,7 +104,7 @@ func TestCircleBresenham(t *testing.T) {
 
 	screenWidth := int32(xMax)
 	screenHeight := int32(yMax)
-	rl.InitWindow(screenWidth, screenHeight, "Bresenham algorithm | Computer Graphics Demo algorithms")
+	rl.InitWindow(screenWidth, screenHeight, "Bresenham Circle drawing algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
 	rl.SetWindowIcon(winImage)
@@ -113,18 +113,72 @@ func TestCircleBresenham(t *testing.T) {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		CircleBresenham(xc, yc, r)
-		if rl.IsMouseButtonDown(0) {
+		if rl.IsMouseButtonPressed(0) {
 			x1, y1 = rl.GetMouseX(), rl.GetMouseY()
+		}
+		if rl.IsMouseButtonDown(0) {
+			x2, y2 = rl.GetMouseX(), rl.GetMouseY()
 			xc, yc = (x1 + x2) / 2, (y1 + y2) / 2
 			r = int32(math.Sqrt(math.Pow(float64(x2-x1), 2) + math.Pow(float64(y2-y1), 2)))
-		}
-		if rl.IsMouseButtonPressed(0) {
-			x2, y2 = rl.GetMouseX(), rl.GetMouseY()
 		}
 		rl.EndDrawing()
 	}
 	rl.CloseWindow()
 }
+
+func TestCircleMidPoint(t *testing.T) {
+	var (
+		xc int32 = 50
+		yc int32 = 50
+		r int32 = 30
+	)
+	x1, x2, y1, y2 := rl.GetMouseX(), rl.GetMouseX(), rl.GetMouseY(), rl.GetMouseY()
+
+	screenWidth := int32(xMax)
+	screenHeight := int32(yMax)
+	rl.InitWindow(screenWidth, screenHeight, "Circle Mid-Point algorithm | Computer Graphics Demo algorithms")
+	defer rl.CloseWindow()
+	winImage := rl.LoadImage("res/golang-48.png")
+	rl.SetWindowIcon(winImage)
+
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
+		rl.ClearBackground(rl.RayWhite)
+		CircleMidPoint(xc, yc, r)
+		if rl.IsMouseButtonPressed(0) {
+			x1, y1 = rl.GetMouseX(), rl.GetMouseY()
+		}
+		if rl.IsMouseButtonDown(0) {
+			x2, y2 = rl.GetMouseX(), rl.GetMouseY()
+			xc, yc = (x1 + x2) / 2, (y1 + y2) / 2
+			r = int32(math.Sqrt(math.Pow(float64(x2-x1), 2) + math.Pow(float64(y2-y1), 2)))
+		}
+		rl.EndDrawing()
+	}
+	rl.CloseWindow()
+}
+
+
+func TestDrawShape(t *testing.T) {
+	screenWidth := int32(xMax)
+	screenHeight := int32(yMax)
+	rl.InitWindow(screenWidth, screenHeight, "Bresenham algorithm | Computer Graphics Demo algorithms")
+	defer rl.CloseWindow()
+	winImage := rl.LoadImage("res/golang-48.png")
+	rl.SetWindowIcon(winImage)
+
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
+		rl.ClearBackground(rl.RayWhite)
+		rl.DrawCircle(40, 40, 30, rl.Black)
+		rl.DrawRectangle(90, 90, 40, 30, rl.Black)
+		rl.DrawEllipse(140, 140, 50, 20, rl.Black)
+		rl.EndDrawing()
+	}
+	rl.CloseWindow()
+}
+
+
 func TestCohenSutherlandClip(t *testing.T) {
 	l := LineInt{-3, -3, 5000, 4440}
 	CohenSutherlandClip(l)
