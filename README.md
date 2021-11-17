@@ -21,14 +21,23 @@ For the purpose of plotting I am using [raylib-go](https://github.com/gen2brain/
     In that case resort to running tests using your text editor or create a main function and invoke the test function.
 
 ## Algorithms covered:
--  📜<code>**line.go**</code>
+- 📜<code>**line.go**</code>
   
     1. DDA (Digital Differential Analyzer)
     2. Breseham algorithm
 
--  📜<code>**clipping.go**</code>
+- 📜<code>**clipping.go**</code>
     
     1. Cohen Sutherland clipping algorithm
+- 📜<code>**circle.go**</code>
+  
+    1. Bresenham circle drawing algorithm
+    2. Mid point circle drawing algorithm
+- 📜<code>**fill.go**</code>
+    1. Flood fill algorithm 
+    2. Boundary fill algorithm
+
+The `CGMM_test` also contains a test animation function (a mini-game).
 
 ## Other files:
 - <code>**utils.go**</code>: Contains Utility functions used across the project.

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	rl "github.com/chunqian/go-raylib/raylib"
+	rl "github.com/gen2brain/raylib-go/raylib"
 	"math"
 	"runtime"
 	"testing"
@@ -19,7 +19,7 @@ func TestDrawPoints(t *testing.T) {
 	defer rl.CloseWindow()
 
 	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
+	rl.SetWindowIcon(*winImage)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -47,7 +47,7 @@ func TestDDA(t *testing.T) {
 	rl.InitWindow(screenWidth, screenHeight, "DDA algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
+	rl.SetWindowIcon(*winImage)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -76,7 +76,7 @@ func TestBresenham(t *testing.T) {
 	rl.InitWindow(screenWidth, screenHeight, "Bresenham algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
+	rl.SetWindowIcon(*winImage)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -107,7 +107,7 @@ func TestCircleBresenham(t *testing.T) {
 	rl.InitWindow(screenWidth, screenHeight, "Bresenham Circle drawing algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
+	rl.SetWindowIcon(*winImage)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -139,7 +139,7 @@ func TestCircleMidPoint(t *testing.T) {
 	rl.InitWindow(screenWidth, screenHeight, "Circle Mid-Point algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
+	rl.SetWindowIcon(*winImage)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -165,7 +165,7 @@ func TestDrawShape(t *testing.T) {
 	rl.InitWindow(screenWidth, screenHeight, "Shape drawing program | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
 	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
+	rl.SetWindowIcon(*winImage)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -185,6 +185,8 @@ func TestAnimation(t *testing.T) {
 
 	rl.InitWindow(screenWidth, screenHeight, "Collision detection")
 	defer rl.CloseWindow()
+	winImage := rl.LoadImage("res/golang-48.png")
+	rl.SetWindowIcon(*winImage)
 
 	// Box A: Moving box
 	boxA := rl.Rectangle{X: 10, Y: float32(rl.GetScreenHeight() / 2.0) - 50, Width:200, Height:100 }
@@ -261,7 +263,7 @@ func TestAnimation(t *testing.T) {
 			rl.DrawRectangleRec(boxCollision, rl.Lime)
 
 			// Draw collision message
-			rl.DrawText("COLLISION!", rl.GetScreenWidth()/2 - rl.MeasureText("COLLISION!", 20)/2, int32(screenUpperLimit/2-10), 20, rl.Black)
+			rl.DrawText("COLLISION!", int32(rl.GetScreenWidth()/2) - rl.MeasureText("COLLISION!", 20/2), int32(screenUpperLimit/2-10), 20, rl.Black)
 		}
 		rl.DrawFPS(10, 10)
 		rl.EndDrawing()
@@ -269,19 +271,59 @@ func TestAnimation(t *testing.T) {
 }
 
 func TestFloodFill(t *testing.T) {
+	// Try filling black boxes by pressing mouse clicks
 	screenWidth := int32(xMax)
 	screenHeight := int32(yMax)
 	rl.InitWindow(screenWidth, screenHeight, "Flood fill algorithm | Computer Graphics Demo algorithms")
 	defer rl.CloseWindow()
-	winImage := rl.LoadImage("res/golang-48.png")
-	rl.SetWindowIcon(winImage)
 
-	box := rl.Rectangle{X: 10, Y: float32(rl.GetScreenHeight() / 2.0) - 50, Width:200, Height:100 }
+	winImage := rl.LoadImage("res/golang-48.png")
+	defer rl.UnloadImage(winImage)
+	rl.SetWindowIcon(*winImage)
+
+	checkboard := rl.LoadImage("res/checkboard.png")
+	checkboardText := rl.LoadTextureFromImage(checkboard)
+	defer rl.UnloadTexture(checkboardText)
+	defer rl.UnloadImage(checkboard)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
-		rl.DrawRectangleLines(int32(box.X), int32(box.Y), int32(box.Height), int32(box.Width), rl.Black)
+		rl.DrawTexture(checkboardText, 0, 0, rl.White)
+		if rl.IsMouseButtonPressed(0) {
+			x1, y1 := rl.GetMouseX(), rl.GetMouseY()
+			FloodFill(x1, y1, rl.Lime, rl.Black, *checkboard)
+			checkboardText = rl.LoadTextureFromImage(checkboard)
+		}
+		rl.EndDrawing()
+	}
+	rl.EndDrawing()
+}
+
+func TestBoundaryFill(t *testing.T) {
+	screenWidth := int32(xMax)
+	screenHeight := int32(yMax)
+	rl.InitWindow(screenWidth, screenHeight, "Boundary fill algorithm | Computer Graphics Demo algorithms")
+	defer rl.CloseWindow()
+
+	winImage := rl.LoadImage("res/golang-48.png")
+	defer rl.UnloadImage(winImage)
+	rl.SetWindowIcon(*winImage)
+
+	checkboard := rl.LoadImage("res/checkboard.png")
+	checkboardText := rl.LoadTextureFromImage(checkboard)
+	defer rl.UnloadTexture(checkboardText)
+	defer rl.UnloadImage(checkboard)
+
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
+		rl.ClearBackground(rl.RayWhite)
+		rl.DrawTexture(checkboardText, 0, 0, rl.White)
+		if rl.IsMouseButtonPressed(0) {
+			x1, y1 := rl.GetMouseX(), rl.GetMouseY()
+			BoundaryFill(x1, y1, rl.Lime, rl.Black, *checkboard)
+			checkboardText = rl.LoadTextureFromImage(checkboard)
+		}
 		rl.EndDrawing()
 	}
 	rl.EndDrawing()

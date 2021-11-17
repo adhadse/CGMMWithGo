@@ -1,7 +1,5 @@
 module CGMM_programs
 
-go 1.16
+go 1.17
 
-require (
-	github.com/chunqian/go-raylib v0.0.0-20210830103051-4bef66ade750
-)
+require github.com/gen2brain/raylib-go/raylib v0.0.0-20211114111602-29ba3cc50849
