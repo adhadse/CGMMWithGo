@@ -179,6 +179,8 @@ func TestDrawShape(t *testing.T) {
 	rl.CloseWindow()
 }
 
+
+
 func TestAnimation(t *testing.T) {
 	screenWidth := int32(xMax)
 	screenHeight := int32(yMax)
@@ -290,6 +292,7 @@ func TestFloodFill(t *testing.T) {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		rl.DrawTexture(checkboardText, 0, 0, rl.White)
+
 		if rl.IsMouseButtonPressed(0) {
 			x1, y1 := rl.GetMouseX(), rl.GetMouseY()
 			FloodFill(x1, y1, rl.Lime, rl.Black, *checkboard)
@@ -327,6 +330,65 @@ func TestBoundaryFill(t *testing.T) {
 		rl.EndDrawing()
 	}
 	rl.EndDrawing()
+}
+
+func TestTransformation(t *testing.T) {
+	screenWidth := int32(xMax)
+	screenHeight := int32(yMax)
+	rl.InitWindow(screenWidth, screenHeight, "3 Transformation | Computer Graphics Demo algorithms")
+	defer rl.CloseWindow()
+	winImage := rl.LoadImage("res/golang-48.png")
+	rl.SetWindowIcon(*winImage)
+
+	state := 0
+	var (
+		posX   int32 = 90
+		posY   int32 = 90
+		width  int32 = 40
+		height int32 = 30
+		screenUpperLimit int32 = 50
+
+		startPosX int32 = 40
+		startPosY int32 = 40
+		endPosX   int32 = 200
+		endPosY   int32 = 200
+
+		thetha  float64 = 60 // angle to rotate line
+
+		centerX   int32 = 450
+		centerY   int32 = 450
+		t_x int32       = 40
+		t_y int32       = 50
+	)
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
+		rl.ClearBackground(rl.RayWhite)
+		rl.DrawRectangleLines(posX, posY, width, height, rl.Black)
+		rl.DrawLine(startPosX, startPosY, endPosX, endPosY, rl.Black)
+		rl.DrawCircle(centerX, centerY, 40, rl.Blue)
+		if rl.IsMouseButtonPressed(0) {
+			if state == 0 {
+				height = (height + posY) * 4 - posY
+				width  = (width  + posX) * 4 - posX
+				state += 1
+				rl.DrawText("Performed 4X Scaling on Rectangle!", int32(rl.GetScreenWidth()/2), int32(screenUpperLimit/2-10), 20, rl.Black)
+			} else
+			if state == 1 {
+				endPosX = startPosX * int32(math.Cos(thetha)) - startPosY * int32(math.Sin(thetha))
+				endPosY = startPosX * int32(math.Sin(thetha)) + startPosY * int32(math.Cos(thetha))
+				state += 1
+				rl.DrawText("Performed 60 degree rotation on line!", int32(rl.GetScreenWidth()/2), int32(screenUpperLimit/2-10), 20, rl.Black)
+			} else
+			if state == 2 {
+				centerX = centerX + t_x
+				centerY = centerY + t_y
+				state += 1
+				rl.DrawText("Performed 40x and 50y translation on circle !", int32(rl.GetScreenWidth()/2), int32(screenUpperLimit/2-10), 20, rl.Black)
+			}
+		}
+		rl.EndDrawing()
+	}
+	rl.CloseWindow()
 }
 
 func TestCohenSutherlandClip(t *testing.T) {
