@@ -353,7 +353,7 @@ func TestTransformation(t *testing.T) {
 		endPosX   int32 = 200
 		endPosY   int32 = 200
 
-		thetha  float64 = 60 // angle to rotate line
+		thetha  float64 = 3.14*60/180 // angle to rotate line
 
 		centerX   int32 = 450
 		centerY   int32 = 450
